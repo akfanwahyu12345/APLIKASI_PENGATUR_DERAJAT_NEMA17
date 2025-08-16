@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:aplikasiantena/screens/dashboard_screen.dart';  // Pastikan import DashboardScreen
+import 'package:aplikasiantena/screens/dashboard_screen.dart'; // Pastikan import DashboardScreen
+import 'package:firebase_database/firebase_database.dart'; // Import Firebase Realtime Database
 
 class PengukuranScreen extends StatefulWidget {
   const PengukuranScreen({super.key});
@@ -10,6 +11,7 @@ class PengukuranScreen extends StatefulWidget {
 
 class _PengukuranScreenState extends State<PengukuranScreen> {
   final TextEditingController _degreeController = TextEditingController();
+  final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
   List<Map<String, String>> historyList = [];
   String _selectedAngleType = 'Azimut';
 
@@ -18,19 +20,26 @@ class _PengukuranScreenState extends State<PengukuranScreen> {
     historyList.add({
       'Dosen/Mahasiswa': 'Mahasiswa',
       'Identitas': '1941160005',
-      'Datetime': '${now.month}/${now.day}/${now.year} ${now.hour}:${now.minute}:${now.second}',
+      'Datetime':
+          '${now.month}/${now.day}/${now.year} ${now.hour}:${now.minute}:${now.second}',
       'Degree': degree,
       'AngleType': _selectedAngleType,
     });
     setState(() {});
   }
 
+  void _addToFirebase(double degree, String selected) {
+    if (selected == 'Azimut') {
+      _dbRef.child('kontrol/sumbu_x').set(degree);
+    } else if (selected == 'Elevasi') {
+      _dbRef.child('kontrol/sumbu_y').set(degree);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Pengukuran"),
-      ),
+      appBar: AppBar(title: const Text("Pengukuran")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -38,11 +47,7 @@ class _PengukuranScreenState extends State<PengukuranScreen> {
           children: [
             // Bagian untuk menampilkan gambar atau icon putaran antena
             Center(
-              child: Icon(
-                Icons.navigation,
-                size: 100,
-                color: Colors.blue,
-              ),
+              child: Icon(Icons.navigation, size: 100, color: Colors.blue),
             ),
             const SizedBox(height: 20),
 
@@ -90,6 +95,10 @@ class _PengukuranScreenState extends State<PengukuranScreen> {
               child: ElevatedButton(
                 onPressed: () {
                   if (_degreeController.text.isNotEmpty) {
+                    _addToFirebase(
+                      double.parse(_degreeController.text),
+                      _selectedAngleType,
+                    );
                     _addHistory(_degreeController.text);
                     _degreeController.clear();
                     setState(() {});
@@ -130,7 +139,9 @@ class _PengukuranScreenState extends State<PengukuranScreen> {
                   final history = historyList[index];
                   return Card(
                     child: ListTile(
-                      title: Text('Dosen/Mahasiswa: ${history['Dosen/Mahasiswa']}'),
+                      title: Text(
+                        'Dosen/Mahasiswa: ${history['Dosen/Mahasiswa']}',
+                      ),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -156,7 +167,10 @@ class _PengukuranScreenState extends State<PengukuranScreen> {
                     // Navigasi ke Home (Dashboard)
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const DashboardScreens(name: 'Nama', id: 'ID')),
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const DashboardScreens(name: 'Nama', id: 'ID'),
+                      ),
                     );
                   },
                   child: const Text('Home'),

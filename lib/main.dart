@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'screens/splash_screen.dart';  // Pastikan splash_screen.dart masih ada
+import 'screens/splash_screen.dart'; // Pastikan splash_screen.dart masih ada
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 

@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "422625288678",
+    "firebase_url": "https://raspberry-8224a-default-rtdb.firebaseio.com",
+    "project_id": "raspberry-8224a",
+    "storage_bucket": "raspberry-8224a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:422625288678:android:a96c929cc6ccc1ad05f627",
+        "android_client_info": {
+          "package_name": "com.example.aplikasiantena"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdNaXHdHhBZnP4_xUt_g8uuqNep4AnqDI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
